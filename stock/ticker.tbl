@@ -1,0 +1,18 @@
+use stock;
+create table if not exists ticker (
+ ticker char(10) primary key,
+ name varchar(100),
+ price float,
+ cap float,
+ sector char(50),
+ industry char(50),
+ url varchar(100),
+ exchange char(50),
+ recordedon timestamp default current_timestamp on update current_timestamp
+);
+
+load data local infile 'nasdaq.csv' into table ticker FIELDS TERMINATED BY ',' ENCLOSED BY '"' (ticker, name, price, @var1, @dummy, @dummy, sector, industry, @dummy) set exchange = 'nasdaq', cap = @var1/1e+6 ;
+
+load data local infile 'nyse.csv' into table ticker FIELDS TERMINATED BY ',' ENCLOSED BY '"' (ticker, name, price, @var1, @dummy, @dummy, sector, industry, @dummy) set exchange = 'nyse', cap = @var1/1e+6 ;
+
+load data local infile 'amex.csv' into table ticker FIELDS TERMINATED BY ',' ENCLOSED BY '"' (ticker, name, price, @var1, @dummy, @dummy, sector, industry, @dummy) set exchange = 'amex', cap = @var1/1e+6 ;
